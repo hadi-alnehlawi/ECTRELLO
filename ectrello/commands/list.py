@@ -1,5 +1,5 @@
 import click
-from trello import Client
+from trello.client import Client
 
 key = "0581b1db0a42258051a8a25fb301e247"
 token = "e6985b1a4afdfb4168814ca486e76ff704e171d5751ce9db8c96731f8b1cc0cb"

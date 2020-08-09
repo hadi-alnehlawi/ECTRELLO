@@ -1,3 +1,3 @@
-from trello.client import *
-from trello.model import *
-from trello.api import *
+from .client import *
+from .model import *
+from .api import *

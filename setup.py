@@ -4,12 +4,14 @@ setup(
     name='ectrello',
     version='0.1',
     packages=find_packages(),
+    # py_modules=['main'],
     include_package_data=True,
     install_requires=[
-        'Click',
+        'Click','requests'
     ],
-    entry_points='''
-        [console_scripts]
-        main=ectrello.main:cli
-    ''',
+    entry_points = {
+        'console_scripts': [
+        'ectrello=ectrello.main:cli'
+        ]
+     }
 )

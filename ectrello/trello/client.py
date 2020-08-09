@@ -1,7 +1,7 @@
 import requests
 import json
-from trello.model import Board, List, Card, Label
-from trello.api import TrelloAPI
+from .model import Board, List, Card, Label
+from .api import TrelloAPI
 
 
 class Client():

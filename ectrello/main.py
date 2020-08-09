@@ -1,38 +1,84 @@
-
 import click
-import os
+from .trello.client import Client
+
+key = "0581b1db0a42258051a8a25fb301e247"
+token = "e6985b1a4afdfb4168814ca486e76ff704e171d5751ce9db8c96731f8b1cc0cb"
+client = Client(key, token)
 
 
-plugin_folder = os.path.join(os.path.dirname(__file__), 'commands')
+@click.group()
+def cli():
+    pass
 
-class MyCLI(click.MultiCommand):
 
-    def list_commands(self, ctx):
-        rv = []
-        for filename in os.listdir(plugin_folder):
-            if filename.endswith('.py'):
-                rv.append(filename[:-3])
-        rv.sort()
-        return rv
 
-    def get_command(self, ctx, name):
-        ns = {}
-        fn = os.path.join(plugin_folder, name + '.py')
-        with open(fn) as f:
-            code = compile(f.read(), fn, 'exec')
-            eval(code, ns, ns)
-        return ns['cli']
-
-help = """
-The  ectrello Command Line Interface is a unified tool to manage your trello.\n
-To see help text, you can run:
-
-  ectrello --help\n
-  ectrello <command> --help\n
-  ectrello <command> <subcommand> help\n
+show_help_board = """ \n
+TEXT=all show all boards.\n
+TEXT=first show first board.\n
+TEXT=last show last board.\n
 """
 
-cli = MyCLI(help=help)
+@click.command()
+@click.option("--show", required=False, help=show_help_board)
+def board(show):
+    """
+    Show board of your trello\n
+    ex: trellocli board --show all
+    """
+    if show == "all" or show is None:
+        boards = client.get_boards()
+        print(boards)
+    elif show == "first":
+        boards = client.get_boards()
+        board = client.get_board(id=boards[0].id)
+        print(board)
+    elif show == "last":
+        boards = client.get_boards()
+        board = client.get_board(id=boards[-1].id)
+        print(board)
+    elif show == "--help":
+        print("helping ")
+    else:
+        board = client.get_board(id=show)
+        print(board)
+
+
+
+
+
+show_help_list = """ \n
+TEXT=all show all list in a board.\n
+TEXT=first show first in a board.\n
+TEXT=last show last in a board.\n
+"""
+
+board_id_help = """ \n
+the board id you want to show its list.
+"""
+
+
+@click.command()
+@click.option("--boardid",required=True, help=board_id_help)
+@click.option("--show", required=False, help=show_help_list)
+def list(show,boardid):
+    """
+    Show lists of your trello board\n
+    ex: ectrello list --boardid 5f2d9bdc021517198e990081 --show all
+    """
+    if show == "all" or show is None:
+        lists = client.get_lists_in_board(boardid)
+        print(lists)
+    elif show == "first":
+        first_list = client.get_lists_in_board(boardid)[0]
+        print(first_list)
+    elif show == "last":
+        first_list = client.get_lists_in_board(boardid)[-1]
+        print(first_list)
+    elif show == "--help":
+        print("helping")
+    else:
+        list = client.get_list(id=list,board_id=boardid)
+        print(list)
 
 if __name__ == '__main__':
     cli()
