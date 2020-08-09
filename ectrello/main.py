@@ -1,8 +1,9 @@
+
 import click
 import os
 
-plugin_folder = os.path.join(os.path.dirname(__file__), 'commands')
 
+plugin_folder = os.path.join(os.path.dirname(__file__), 'commands')
 
 class MyCLI(click.MultiCommand):
 
@@ -30,6 +31,7 @@ To see help text, you can run:
   ectrello <command> --help\n
   ectrello <command> <subcommand> help\n
 """
+
 cli = MyCLI(help=help)
 
 if __name__ == '__main__':
