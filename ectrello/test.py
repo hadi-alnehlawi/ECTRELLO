@@ -23,14 +23,14 @@ lists = client.get_lists_in_board(board_id)
 print(lists)
 #
 # # list
-list_id = lists[2].id
-# # list = client.get_list(list_id)
-# # print(list)
+# list_id = lists[2].id
+list = client.get_list("sdfsd")
+print(list)
 # #
-cards = client.get_cards_in_list(list_id)
-card_id = cards[2].id
-print(cards)
-print(card_id)
+# cards = client.get_cards_in_list(list_id)
+# card_id = cards[2].id
+# print(cards)
+# print(card_id)
 #
 # card
 # card_id = cards[0].id
@@ -56,12 +56,12 @@ print(card_id)
 
 #
 # # epilot
-labels = client.get_labels_in_board(board_id)
-# print(labels)
-
-meeting_label = labels[0]
-label_id = meeting_label.id
-lable_card = client.post_label_card(id=label_id, card_id=card_id)
-print(meeting_label)
+# labels = client.get_labels_in_board(board_id)
+# # print(labels)
+#
+# meeting_label = labels[0]
+# label_id = meeting_label.id
+# lable_card = client.post_label_card(id=label_id, card_id=card_id)
+# print(meeting_label)
 # card = client.post_card_comment(id=card_id,comment="comment from api")
 # print(card)

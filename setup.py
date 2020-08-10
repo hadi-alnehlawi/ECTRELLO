@@ -7,11 +7,12 @@ setup(
     # py_modules=['main'],
     include_package_data=True,
     install_requires=[
-        'Click','requests'
+        'Click', 'requests', 'autopep8', 'pycodestyle'
+
     ],
-    entry_points = {
+    entry_points={
         'console_scripts': [
-        'ectrello=ectrello.main:cli'
+            'ectrello=ectrello.main:cli'
         ]
-     }
+    }
 )

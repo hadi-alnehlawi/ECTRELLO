@@ -31,7 +31,7 @@ class Client():
 
     def get_board(self, id):
         if not id in self.get_boards_id():
-            return {"status": 404, "message": "board_id is not valid"}
+            return {"status_code": 404, "message": "board_id is not valid"}
         else:
             url = self.trello_api.board_url(id)
             board_response = requests.get(url).json()
@@ -57,10 +57,13 @@ class Client():
 
     def get_list(self, id):
         url = self.trello_api.list_url(id=id, method="GET")
-        list_response = requests.get(url).json()
-        id = list_response.get("id")
-        name = list_response.get("name")
-        return List(id, name)
+        if requests.get(url).status_code == 200:
+            list_response = requests.get(url).json()
+            id = list_response.get("id")
+            name = list_response.get("name")
+            return List(id, name)
+        else:
+            return {"status_code": requests.get(url).status_code, "message": "list_id is not valid"}
 
     def post_list(self, name, board_id):
         payload = {
