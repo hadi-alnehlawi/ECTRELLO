@@ -22,27 +22,35 @@ def docstring_parameter(*sub):
     return dec
 
 
+# class Ectrello(click.Group):
+    # def format_help(self, ctx, formatter):
+    #     help_txt = "Usage: ectrello <command> [<arg>]\n"
+    #     formatter.write(f"{help_txt}")
+
+
 @click.group()
 def cli():
     pass
 
 
-show_help_board = """ \n
-TEXT=all show all boards.\n
-TEXT=first show first board.\n
-TEXT=last show last board.\n
+# ********************************************************************************
+# BOARD
+show_help_board = """
+TEXT=all show all boards. |
+TEXT=first show first board. |
+TEXT=last show last board. |
 """
 
-show_board_ex_help = underline("ectrello board") + " " + "--show all"
+board_ex_help = underline("ectrello") + " " + underline("board") + " " + "--show"
 
 
 @cli.command('board')
 @click.option("--show", required=False, help=show_help_board)
-@docstring_parameter(show_board_ex_help)
+@docstring_parameter(board_ex_help)
 def board(show):
     """
-    Show board of your trello\n
-    ex: {0}
+    Display the board of your Trello\n
+    {0}
     """
     if show == "all" or show is None:
         boards = client.get_boards()
@@ -60,30 +68,43 @@ def board(show):
         print(board)
 
 
-show_list_help = """ \n
-TEXT=all show all list in a board.\n
-TEXT=first show first in a board.\n
-TEXT=last show last in a board.\n
+# ********************************************************************************
+# LIST
+
+board_id_help = """
+TEXT=<board_id> the board id to show its list.
+"""
+add_list_help = " TEXT=<list_name> add a new list with name."
+
+show_list_help = """
+TEXT=<list_id> show one list of id. |
+TEXT=all show all list in a board. |
+TEXT=first show first in a board. |
+TEXT=last show last in a board. |
 """
 
-board_id_help = """ \n
-the board id you want to show its list.
-"""
-
-
-show_list_ex_help = underline("ectrello") + " " + underline("list") + " -boardid" + \
-    " 5f2d9bdc " + "--show all"
+list_ex_help = underline("ectrello") + " " + underline("list") + " " + "--boardid"\
+    + " <board_id> " + "--add " + "<list_name>" + "\n"\
+    + underline("ectrello") + " " + underline("list") + " " + "--boardid"\
+    + " <board_id> " + "--show <list_id>" + "\n"\
+    + underline("ectrello") + " " + underline("list") + " " + "--boardid"\
+    + " <board_id> " + "--show all" + "\n"\
+    + underline("ectrello") + " " + underline("list") + " " + "--boardid"\
+    " <board_id> " + "--show first" + "\n"\
+    + underline("ectrello") + " " + underline("list") + " " + "--boardid"\
+    " <board_id> " + "--show last" + "\n"\
+    + underline("ectrello") + " " + underline("list") + " " + "--help"
 
 
 @cli.command('list')
 @click.option("--boardid", required=True, help=board_id_help)
+@click.option("--add", required=False, help=add_list_help)
 @click.option("--show", required=False, help=show_list_help)
-@click.option("--add", required=False, help=show_list_help)
-@docstring_parameter(show_list_ex_help)
+@docstring_parameter(list_ex_help)
 def list(show, add, boardid):
     """
-    Show lists of your trello board\n
-    ex: {0}
+    Add a list to a boad, display the lists of a board \n
+    {0}
     """
     if show == "all":
         lists = client.get_lists_in_board(boardid)
@@ -97,19 +118,59 @@ def list(show, add, boardid):
     elif (show is None) and (add is None):
         print("Warning: Please select an option --show or --add")
         return
-    # elif show is not None:
-    #     list = client.get_list(id=show, board_id=boardid)
-    #     print(list)
     elif add is not None:
         list = client.post_list(name=add, board_id=boardid)
-        board_name = client.get_board(id=boardid).name
-        print(f"{list}\nSuccess: A new list has been created in board '{board_name}'")
+        print(list)
     else:
+        # show is not None
         list = client.get_list(id=show)
         print(list)
 
 
-# new_list = client.post_list(name="Hello10 From Python", board_id=board_id)
+# ********************************************************************************
+# CARD
+list_id_help = """
+TEXT=<card_id> the list id to show its card.
+"""
+add_card_help = " TEXT=<card_name> add a new card with name."
+
+show_card_help = """
+TEXT=<card_id> show one card of id. |
+TEXT=all show all cards in a list.
+"""
+
+card_ex_help = underline("ectrello") + " " + underline("card") + " " + "--listid"\
+    + " " + "<list_id> " + "--add" + " " + "<card_name>" + "\n"\
+    + underline("ectrello") + " " + underline("card") + " " + "--listid"\
+    + " " + "<list_id> " + "--show" + " " + "<card_id>" + "\n"\
+    + underline("ectrello") + " " + underline("card") + " " + "--help"
+
+
+@ cli.command('card')
+@click.option("--listid", required=True, help=list_id_help)
+@click.option("--add", required=False, help=add_card_help)
+@click.option("--show", required=False, help=show_card_help)
+@docstring_parameter(card_ex_help)
+def card(show, add, listid):
+    """
+    Add a card to a column, display the cards of a list \n
+    {0}
+    """
+    if show == "all":
+        cards = client.get_cards_in_list(listid)
+        print(cards)
+    elif (show is None) and (add is None):
+        print("Warning: Please select an option --show or --add")
+        return
+    elif add is not None:
+        card = client.post_card(name=add, list_id=listid)
+        print(card)
+    else:
+        # show is not None
+        card = client.get_card(id=show)
+        print(card)
+
+
 if __name__ == '__main__':
     print(board_id_help)
     cli()

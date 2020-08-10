@@ -5,7 +5,7 @@ class Board():
         self.name = name
 
     def __repr__(self):
-        return f'{{id: {self.id}, name: {self.name}}}'
+        return f'{{ id: {self.id}, name: {self.name} }}'
 
 
 class List():
@@ -15,7 +15,7 @@ class List():
         self.board_id = board_id
 
     def __repr__(self):
-        return f'{{id: {self.id}, name: {self.name}}}'
+        return f'{{ id: {self.id}, name: {self.name} }}'
 
 
 class Card():
@@ -27,7 +27,7 @@ class Card():
         self.labels = labels
 
     def __repr__(self):
-        return f"\n<Card id:{self.id} name:{self.name} labels:{self.labels} comment:{self.comment}>"
+        return f"{{ id: {self.id}, name: {self.name}, labels: {self.labels}, comment: {self.comment} }}"
 
 
 class Label():

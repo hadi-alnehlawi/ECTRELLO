@@ -18,7 +18,6 @@ class Client():
         boards = []
         url = self.trello_api.boards_url()
         boards_response = requests.get(url).json()
-        # boards_json = self.trello_api.boards_json()
         for board_dict in boards_response:
             id = board_dict.get("id")
             name = board_dict.get("name")
@@ -31,7 +30,7 @@ class Client():
 
     def get_board(self, id):
         if not id in self.get_boards_id():
-            return {"status_code": 404, "message": "board_id is not valid"}
+            return {"status_code": 404, "message": f"[{board_id}] is not an existing id"}
         else:
             url = self.trello_api.board_url(id)
             board_response = requests.get(url).json()
@@ -45,7 +44,7 @@ class Client():
     def get_lists_in_board(self, board_id):
         lists = []
         if not board_id in self.get_boards_id():
-            return {"status": 404, "message": "board_id is not valid"}
+            return {"status_code": 404, "message": f"[{board_id}] is not an existing id"}
         else:
             url = self.trello_api.lists_in_board_url(board_id)
             lists_response = requests.get(url).json()
@@ -56,63 +55,69 @@ class Client():
             return lists
 
     def get_list(self, id):
-        url = self.trello_api.list_url(id=id, method="GET")
-        if requests.get(url).status_code == 200:
+        try:
+            url = self.trello_api.list_url(id=id, method="GET")
             list_response = requests.get(url).json()
             id = list_response.get("id")
             name = list_response.get("name")
             return List(id, name)
-        else:
-            return {"status_code": requests.get(url).status_code, "message": "list_id is not valid"}
+        except:
+            return {"status_code": requests.get(url).status_code, "message": f"[{list_id}] is not an existing id"}
 
     def post_list(self, name, board_id):
-        payload = {
-            "key": f"{self.key}", "token": f"{self.token}", "name": f"{name}", "idBoard": f"{board_id}"
-        }
-        url = self.trello_api.list_url(method="POST")
-        list_response = requests.post(url=url, json=payload)
-        if list_response.status_code == 200:
+        try:
+            payload = {
+                "key": f"{self.key}", "token": f"{self.token}", "name": f"{name}", "idBoard": f"{board_id}"
+            }
+            url = self.trello_api.list_url(method="POST")
+            list_response = requests.post(url=url, json=payload)
             res_json = json.loads(list_response.text)
             id = res_json.get("id")
             name = res_json.get("name")
             return List(id=id, name=name, board_id=board_id)
-        else:
-            list_response.status_code
+        except:
+            return {"status_code": requests.get(url).status_code, "message": f"[{board_id}] is not an existing id"}
 
     # *****
     # CARD
     # *****
 
     def get_cards_in_list(self, list_id):
-        cards = []
-        url = self.trello_api.cards_in_list_url(list_id)
-        cards_in_list_response = requests.get(url).json()
-        for card_dict in cards_in_list_response:
-            id = card_dict.get("id")
-            name = card_dict.get("name")
-            cards.append(Card(id, name, list_id))
-        return cards
+        try:
+            cards = []
+            url = self.trello_api.cards_in_list_url(list_id)
+            cards_in_list_response = requests.get(url).json()
+            for card_dict in cards_in_list_response:
+                id = card_dict.get("id")
+                name = card_dict.get("name")
+                cards.append(Card(id, name, list_id))
+            return cards
+        except:
+            return {"status_code": requests.get(url).status_code, "message": f"[{list_id}] is not an existing id"}
 
     def get_card(self, id):
-        url = self.trello_api.card_url(id=id, method="GET")
-        card_response = requests.get(url).json()
-        id = card_response.get("id")
-        name = card_response.get("name")
-        return Card(id, name)
+        try:
+            url = self.trello_api.card_url(id=id, method="GET")
+            card_response = requests.get(url).json()
+            id = card_response.get("id")
+            name = card_response.get("name")
+            return Card(id, name)
+        except:
+            return {"status_code": requests.get(url).status_code, "message": f"[{id}] is not an existing id"}
 
     def post_card(self, name, list_id):
-        payload = {
-            "key": f"{self.key}", "token": f"{self.token}", "name": f"{name}", "idList": f"{list_id}"
-        }
-        url = self.trello_api.card_url(method="POST")
-        card_response = requests.post(url=url, json=payload)
-        if card_response.status_code == 200:
+        try:
+            payload = {
+                "key": f"{self.key}", "token": f"{self.token}", "name": f"{name}", "idList": f"{list_id}"
+            }
+            url = self.trello_api.card_url(method="POST")
+            card_response = requests.post(url=url, json=payload)
             res_json = json.loads(card_response.text)
             id = res_json.get("id")
             name = res_json.get("name")
             return Card(id=id, name=name, list_id=list_id)
-        else:
-            return card_response.status_code
+        except:
+            return {"status_code": requests.get(url).status_code, "message": f"[{list_id}] is not existed id"}
 
     # add comment to a card
     def post_card_comment(self, id, comment):
