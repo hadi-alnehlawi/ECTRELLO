@@ -77,10 +77,21 @@ class TrelloAPI():
         else:
             # GET
             # https://api.trello.com/1/labels/{{labelId}}?key={{key}}&token={{token}}
-            url = self.trello_url + f"labels/{id}"
+            url = self.trello_url + f"labels/{id}" + self.request_query
             return url
 
     def label_card_url(self, card_id):
         # https://api.trello.com/1/cards/{id}/idLabels
         url = self.trello_url + f"cards/{card_id}/idLabels"
+        return url
+
+    # COMMENT
+    def comments_in_card_url(self, card_id):
+        # https://api.trello.com/1/cards/{{cardId}}/actions?key={{key}}&token={{token}}
+        url = self.trello_url + f"cards/{card_id}/actions?" + self.request_query
+        return url
+
+    def comment_card_url(self, card_id):
+        # https://api.trello.com/1/cards/{{cardId}}/actions/comments
+        url = self.trello_url + f"cards/{card_id}/actions/comments"
         return url

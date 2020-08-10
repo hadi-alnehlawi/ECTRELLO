@@ -1,7 +1,9 @@
 import requests
 import json
-from .model import Board, List, Card, Label
+from .model import Board, List, Card, Label, Comment
 from .api import TrelloAPI
+# from trello.model import Board, List, Card, Label, Comment
+# from trello.api import TrelloAPI
 
 
 class Client():
@@ -30,7 +32,7 @@ class Client():
 
     def get_board(self, id):
         if not id in self.get_boards_id():
-            return {"status_code": 404, "message": f"[{board_id}] is not an existing id"}
+            return {"status_code": 404, "message": "no data returned"}
         else:
             url = self.trello_api.board_url(id)
             board_response = requests.get(url).json()
@@ -44,7 +46,7 @@ class Client():
     def get_lists_in_board(self, board_id):
         lists = []
         if not board_id in self.get_boards_id():
-            return {"status_code": 404, "message": f"[{board_id}] is not an existing id"}
+            return {"status_code": 404, "message": "no data returned"}
         else:
             url = self.trello_api.lists_in_board_url(board_id)
             lists_response = requests.get(url).json()
@@ -62,7 +64,7 @@ class Client():
             name = list_response.get("name")
             return List(id, name)
         except:
-            return {"status_code": requests.get(url).status_code, "message": f"[{list_id}] is not an existing id"}
+            return {"status_code": requests.get(url).status_code, "message": "no data returned"}
 
     def post_list(self, name, board_id):
         try:
@@ -76,7 +78,7 @@ class Client():
             name = res_json.get("name")
             return List(id=id, name=name, board_id=board_id)
         except:
-            return {"status_code": requests.get(url).status_code, "message": f"[{board_id}] is not an existing id"}
+            return {"status_code": requests.get(url).status_code, "message": "no data returned"}
 
     # *****
     # CARD
@@ -93,7 +95,7 @@ class Client():
                 cards.append(Card(id, name, list_id))
             return cards
         except:
-            return {"status_code": requests.get(url).status_code, "message": f"[{list_id}] is not an existing id"}
+            return {"status_code": requests.get(url).status_code, "message": "no data returned"}
 
     def get_card(self, id):
         try:
@@ -103,7 +105,7 @@ class Client():
             name = card_response.get("name")
             return Card(id, name)
         except:
-            return {"status_code": requests.get(url).status_code, "message": f"[{id}] is not an existing id"}
+            return {"status_code": requests.get(url).status_code, "message": "no data returned"}
 
     def post_card(self, name, list_id):
         try:
@@ -117,7 +119,7 @@ class Client():
             name = res_json.get("name")
             return Card(id=id, name=name, list_id=list_id)
         except:
-            return {"status_code": requests.get(url).status_code, "message": f"[{list_id}] is not existed id"}
+            return {"status_code": requests.get(url).status_code, "message": "no data returned"}
 
     # add comment to a card
     def post_card_comment(self, id, comment):
@@ -142,7 +144,7 @@ class Client():
     def get_labels_in_board(self, board_id):
         labels = []
         if not board_id in self.get_boards_id():
-            return {"status": 404, "message": "board_id is not valid"}
+            return {"status": 404, "message": "no data returned"}
         else:
             url = self.trello_api.labels_in_board_url(board_id)
             lists_response = requests.get(url).json()
@@ -186,3 +188,34 @@ class Client():
             return "Done"
         else:
             return card_comment_response.status_code
+
+    # *******
+    # COMMENT
+    # *******
+
+    def get_comments_in_card(self, card_id):
+        try:
+            comments = []
+            url = self.trello_api.comments_in_card_url(card_id)
+            comments_response = requests.get(url).json()
+            for list_dict in comments_response:
+                type = list_dict.get("type")
+                if type == "commentCard":
+                    card_id = list_dict.get("data").get("card").get("id")
+                    text = list_dict.get("data").get("text")
+                    comments.append(Comment(text=text, card_id=card_id))
+            return comments
+        except:
+            return {"status_code": requests.get(url).status_code, "message": "no data returned"}
+
+    def post_comment_card(self, text, card_id):
+        try:
+            url = self.trello_api.comment_card_url(card_id=card_id)
+            payload = {
+                "key": f"{self.key}", "token": f"{self.token}", "id": f"{card_id}", "text": f"{text}"
+            }
+            comment_card_response = requests.post(url=url, json=payload)
+            res_json = json.loads(comment_card_response.text)
+            return Comment(text=text, card_id=card_id)
+        except:
+            return {"status_code": requests.get(url).status_code, "message":  "no data returned"}

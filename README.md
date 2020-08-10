@@ -1,8 +1,8 @@
 # ECTRELLO
 Epilot.Cloud trello cli  -**ectrello**-  is a user-friendly cli which makes interacting with Trello so fun and easy. It has three main functionality:
-1- add a Trello card to a column.
-2- add a Trello card to a column.
-3- add label and comment on a card (X column of board Y).
+1- Add a Trello card to a column : `$ ectrello list --boardid <board_id> --add <list_name>`
+2- Add a Trello card to a column: `$ ectrello card --listid <board_id> --card <card_name>`
+3- Add label and comment on a card (X column of board Y):
 
 ## Usage
 ` ectrello <command> [options]`
@@ -12,29 +12,64 @@ These are ectroll commands used in various situations: **board**, **list**, **ca
 
 
 
-### board
-`ectrello board [option]`
- Display the board of your trello.
+### BOARD
+`ectrello board [OPTIONS]`
+ Display the board of your trello
  >options
-`--show all`  display all board of your trello
-`--show first` display first list of your trello
-`--show last`  display last list of your trello
+`--show all`  display all board of your trello.
+`--show first` display first list of your trello.
+`--show last`  display last list of your trello.
+`--help` display help of the command.
 
-Example:
- `$ ectrello board show --first`
+Examplea:
+ ```
+ $ ectrello board --show all
+ $ ectrello board --help
+ ```
 
-### list
-` ectrello list --boardid <boardid> [<options>]`
-show and create the list in one of your boards.
+### LIST
+
+` ectrello list [OPTIONS]`
+- Add a Trello card to a column
+- Show a Trello card from one of boards
+
 >options
->`--add <list_name>` 	create new list with name <list_name> in one of your boards
->`--show <list_id>` 		display the list which its is <list_id>
->`--show all` 					display all lists in one of your board
->`--show first`  			display first list in one of your board
->`--show last`			    display last list in one of your board
-
+> `--boardid <board_id>` 	the board id to show its list  [**required**].
+>`--add <list_name>` 	create new list with name <list_name> in one of your boards.
+>`--show <list_id>` 		display the list which its is <list_id>.
+>`--show all` 					display all lists in one of your board.
+>`--show first`  			display first list in one of your board.
+>`--show last`			    display last list in one of your board.
+>`--help` display help of the command.
 
 Examples:
- `$ ectrello  list -boardid 5f2d9bdc --add "meeting with the team`
- `$ ectrello  list -boardid 5f2d9bdc --show all`
- `$ ectrello  list -boardid 5f2d9bdc --show all`
+
+ ```
+$ ectrello list --boardid <board_id> --add <list_name>
+$ ectrello list --boardid <board_id> --show <list_id>
+$ ectrello list --boardid <board_id> --show all
+$ ectrello list --boardid <board_id> --show first
+$ ectrello list --help
+ ```
+
+
+
+### CARD
+
+` ectrello card [OPTIONS]`
+- Add a card to a column
+- Display the cards of a list
+
+>options
+> `--listid <list_id>`the list id to show its card  [**required**].
+>`--add <card_id>` 	add a new card with name.
+>`--show <card_id>` 	show one card of an id.
+>`--help` display help of the command.
+
+Examples:
+
+ ```
+$ ectrello card --listid <list_id> --add <card_name>
+$ ectrello card --listid <list_id> --show <card_id>
+$ ectrello card --help
+ ```

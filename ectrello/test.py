@@ -9,28 +9,36 @@ client = Client(key, token)
 # ****
 
 # boards
-boards = client.get_boards()
-print(boards)
+# boards = client.get_boards()
+# print(boards)
 
 # board
-board_id = client.get_boards()[1].id
-board = client.get_board(board_id)
-print(board)
+# board_id = client.get_boards()[1].id
+# board = client.get_board(board_id)
+# print(board)
 
 # # # lists in board
-board_id = client.get_boards()[1].id
-lists = client.get_lists_in_board(board_id)
-print(lists)
+# board_id = client.get_boards()[1].id
+# lists = client.get_lists_in_board(board_id)
+# print(lists)
 #
 # # list
-# list_id = lists[2].id
-list = client.get_list("sdfsd")
-print(list)
+# list_id = lists[5].id
+# list = client.get_list(list_id)
+# print(list)
 # #
 # cards = client.get_cards_in_list(list_id)
-# card_id = cards[2].id
-# print(cards)
-# print(card_id)
+# card_id = cards[0].id
+card = client.get_card("5f2c3a83bba30c06ba1bcbe2")
+print(card)
+
+# comment
+
+
+# new_comment = client.post_comment_card(card_id=card_id, text="new comment 12:120 am")
+comment = client.get_comments_in_card("5f2c3a83bba30c06ba1bcbe2")
+print(comment)
+# print(comment)
 #
 # card
 # card_id = cards[0].id

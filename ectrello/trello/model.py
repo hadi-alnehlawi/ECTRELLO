@@ -37,4 +37,13 @@ class Label():
         self.board_id = board_id
 
     def __repr__(self):
-        return f"\n<Label id:{self.id} name:{self.name} board:{self.board_id}>"
+        return f"{{ id:{self.id}, name:{self.name} }}"
+
+
+class Comment():
+    def __init__(self, text, card_id):
+        self.text = text
+        self.card_id = card_id
+
+    def __repr__(self):
+        return f"{{ text: {self.text}, card_id: {self.card_id} }}"
