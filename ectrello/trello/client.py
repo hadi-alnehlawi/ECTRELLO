@@ -32,7 +32,7 @@ class Client():
 
     def get_board(self, id):
         if not id in self.get_boards_id():
-            return {"status_code": 404, "message": "no data returned"}
+            return {"status_code": 404, "message": "input data is wrong"}
         else:
             url = self.trello_api.board_url(id)
             board_response = requests.get(url).json()
@@ -46,7 +46,7 @@ class Client():
     def get_lists_in_board(self, board_id):
         lists = []
         if not board_id in self.get_boards_id():
-            return {"status_code": 404, "message": "no data returned"}
+            return {"status_code": 404, "message": "input data is wrong"}
         else:
             url = self.trello_api.lists_in_board_url(board_id)
             lists_response = requests.get(url).json()
@@ -64,7 +64,7 @@ class Client():
             name = list_response.get("name")
             return List(id, name)
         except:
-            return {"status_code": requests.get(url).status_code, "message": "no data returned"}
+            return {"status_code": requests.get(url).status_code, "message": "input data is wrong"}
 
     def post_list(self, name, board_id):
         try:
@@ -78,7 +78,7 @@ class Client():
             name = res_json.get("name")
             return List(id=id, name=name, board_id=board_id)
         except:
-            return {"status_code": requests.get(url).status_code, "message": "no data returned"}
+            return {"status_code": requests.get(url).status_code, "message": "input data is wrong"}
 
     # *****
     # CARD
@@ -95,7 +95,7 @@ class Client():
                 cards.append(Card(id, name, list_id))
             return cards
         except:
-            return {"status_code": requests.get(url).status_code, "message": "no data returned"}
+            return {"status_code": requests.get(url).status_code, "message": "input data is wrong"}
 
     def get_card(self, id):
         try:
@@ -103,9 +103,11 @@ class Client():
             card_response = requests.get(url).json()
             id = card_response.get("id")
             name = card_response.get("name")
-            return Card(id, name)
+            labels_id = card_response.get("idLabels")
+            board_id = card_response.get("idBoard")
+            return Card(id=id, name=name, labels_id=labels_id, board_id=board_id)
         except:
-            return {"status_code": requests.get(url).status_code, "message": "no data returned"}
+            return {"status_code": requests.get(url), "message": "input data is wrong"}, 404
 
     def post_card(self, name, list_id):
         try:
@@ -117,9 +119,10 @@ class Client():
             res_json = json.loads(card_response.text)
             id = res_json.get("id")
             name = res_json.get("name")
-            return Card(id=id, name=name, list_id=list_id)
+            labels_id = res_json.get("idLabels")
+            return Card(id=id, name=name, list_id=list_id, labels_id=labels_id)
         except:
-            return {"status_code": requests.get(url).status_code, "message": "no data returned"}
+            return {"status_code": requests.get(url), "message": "input data is wrong"}, 404
 
     # add comment to a card
     def post_card_comment(self, id, comment):
@@ -144,50 +147,77 @@ class Client():
     def get_labels_in_board(self, board_id):
         labels = []
         if not board_id in self.get_boards_id():
-            return {"status": 404, "message": "no data returned"}
+            return {"status": 404, "message": "input data is wrong"}
         else:
             url = self.trello_api.labels_in_board_url(board_id)
             lists_response = requests.get(url).json()
-            # lists_json = self.trello_api.lists_in_board_json(board_id)
             for list_dict in lists_response:
                 id = list_dict.get("id")
                 name = list_dict.get("name")
                 labels.append(Label(id=id, name=name, board_id=board_id))
             return labels
 
-    def get_label(self, label_id):
-        url = self.trello_api.label_url(id=id, method="GET")
-        label_response = requests.get(url).json()
-        id = label_responsene.get("id")
-        name = label_responsene.get("id")
-        return Label(id=id, name=name)
+    def get_labels_on_card(self, card_id):
+        labels = []
+        try:
+            card = self.get_card(id=card_id)
+            for label_id in card.labels_id:
+                text = self.get_label(id=label_id).name
+                labels.append(Label(id=label_id, card_id=card_id, name=text))
+            return labels
+        except:
+            return {"status_code": requests.get(url).status_code, "message": "input data is wrong"}
 
-    def post_label(self, name, board_id):
+    def get_label(self, id):
+        try:
+            url = self.trello_api.label_url(id=id, method="GET")
+            label_response = requests.get(url).json()
+            id = label_response.get("id")
+            name = label_response.get("name")
+            return Label(id=id, name=name)
+        except:
+            return {"status_code": requests.get(url), "message": "input data is wrong"}, 404
+
+    def post_label_to_baord(self, name, board_id, color="red"):
+        # try:
         payload = {
-            "key": f"{self.key}", "token": f"{self.token}", "name": f"{name}", "idBoard": f"{board_id}"
+            "key": f"{self.key}", "token": f"{self.token}", "name": f"{name}", "idBoard": f"{board_id}", "color": f"{color}"
         }
         url = self.trello_api.label_url(method="POST")
         lable_response = requests.post(url=url, json=payload)
-        if lable_response.status_code == 200:
-            res_json = json.loads(lable_response.text)
-            id = res_json.get("id")
-            name = res_json.get("name")
-            return Label(id=id, name=name, board_id=board_id)
-        else:
-            return label.response.status_code
+        res_json = json.loads(lable_response.text)
+        id = res_json.get("id")
+        name = res_json.get("name")
+        board_id = res_json.get("idBoard")
+        return Label(id=id, name=name, board_id=board_id)
+        # except:
+        #     return {"status_code": requests.get(url).status_code, "message": "input data is wrong"}
 
-    def post_label_card(self, id, card_id):
-        payload = {
-            "key": f"{self.key}", "token": f"{self.token}", "id": f"{card_id}", "value": f"{id}"
-        }
-        url = self.trello_api.label_card_url(card_id=card_id)
-        label_card_response = requests.post(url=url, json=payload)
-        if label_card_response.status_code == 200:
+    def post_label_to_card(self, id, card_id):
+        try:
+            payload = {
+                "key": f"{self.key}", "token": f"{self.token}", "value": f"{id}"
+            }
+            url = self.trello_api.label_card_url(card_id=card_id)
+            label_to_card_response = requests.post(url=url, json=payload)
+            res_json = json.loads(label_to_card_response.text)
+            name = self.get_label(id=id).name
+            return Label(name=name, card_id=card_id)
+        except:
+            return {"status_code": requests.get(url).status_code, "message": "input data is wrong"}
+
+    def post_exisitng_label_to_card(self, id, card_id):
+        try:
+            payload = {
+                "key": f"{self.key}", "token": f"{self.token}", "value": f"{id}"
+            }
+            url = self.trello_api.label_card_url(card_id=card_id)
+            label_card_response = requests.post(url=url, json=payload)
             res_json = json.loads(label_card_response.text)
-            print(res_json)
-            return "Done"
-        else:
-            return card_comment_response.status_code
+            name = self.get_label(id=id).name
+            return Label(name=name, card_id=card_id)
+        except:
+            return label_card_response.status_code
 
     # *******
     # COMMENT
@@ -206,7 +236,7 @@ class Client():
                     comments.append(Comment(text=text, card_id=card_id))
             return comments
         except:
-            return {"status_code": requests.get(url).status_code, "message": "no data returned"}
+            return {"status_code": requests.get(url).status_code, "message": "input data is wrong"}
 
     def post_comment_card(self, text, card_id):
         try:
@@ -218,4 +248,4 @@ class Client():
             res_json = json.loads(comment_card_response.text)
             return Comment(text=text, card_id=card_id)
         except:
-            return {"status_code": requests.get(url).status_code, "message":  "no data returned"}
+            return {"status_code": requests.get(url).status_code, "message":  "input data is wrong"}

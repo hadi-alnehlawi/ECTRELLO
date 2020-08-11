@@ -69,19 +69,14 @@ class TrelloAPI():
             # https://api.trello.com/1/labels
             url = self.trello_url + f"labels"
             return url
-        elif method == "PUT":
-            # PUT
-            # https://api.trello.com/1/labels/{id}
-            url = self.trello_url + f"labels/{id}"
-            return url
         else:
             # GET
             # https://api.trello.com/1/labels/{{labelId}}?key={{key}}&token={{token}}
-            url = self.trello_url + f"labels/{id}" + self.request_query
+            url = self.trello_url + f"labels/{id}?" + self.request_query
             return url
 
     def label_card_url(self, card_id):
-        # https://api.trello.com/1/cards/{id}/idLabels
+        # "https://api.trello.com/1/cards/{id}/idLabels"
         url = self.trello_url + f"cards/{card_id}/idLabels"
         return url
 

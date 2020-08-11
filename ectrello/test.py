@@ -1,8 +1,18 @@
-from trello.client import Client
+# from trello.client import Client
+from pathlib import Path
+from os import path
+import json
+from trello.config import Configuration
 
 key = "0581b1db0a42258051a8a25fb301e247"
 token = "e6985b1a4afdfb4168814ca486e76ff704e171d5751ce9db8c96731f8b1cc0cb"
-client = Client(key, token)
+# client = Client(key, token)
+
+path = Path(path.expanduser("~/.ectrello-config"))
+config = Configuration(config_path=path)
+config.post_config()
+print("key: ", config.key)
+print("token : ", config.token)
 
 # ****
 # GET
@@ -27,17 +37,17 @@ client = Client(key, token)
 # list = client.get_list(list_id)
 # print(list)
 # #
-# cards = client.get_cards_in_list(list_id)
-# card_id = cards[0].id
-card = client.get_card("5f2c3a83bba30c06ba1bcbe2")
-print(card)
-
-# comment
+# # cards = client.get_cards_in_list(list_id)
+# # card_id = cards[0].id
+# card = client.get_card("5f2c3a83bba30c06ba1bcbe2")
+# print("card ", card)
+#
+# # comment
 
 
 # new_comment = client.post_comment_card(card_id=card_id, text="new comment 12:120 am")
-comment = client.get_comments_in_card("5f2c3a83bba30c06ba1bcbe2")
-print(comment)
+# comment = client.get_comments_in_card("5f2c3a83bba30c06ba1bcbe2")
+# print(comment)
 # print(comment)
 #
 # card
@@ -58,11 +68,15 @@ print(comment)
 # cards = client.get_cards_in_list(list_id)
 
 #
-# label
-# new_label = client.post_label(name="label10",board_id=board_id)
-# print(new_label)
-
+# # label
+# label = client.get_label(id="5f2c3a817669b225490a7168")
+# print("label ", label)
 #
+# # post_label_card = client.post_label_card(id="5f2c3a817669b225490a7168",
+# #                                     card_id="5f2c3a83bba30c06ba1bcbe2")
+# labels_on_card = client.get_labels_on_card(card.id)
+# print("label on card", labels_on_card)
+# #
 # # epilot
 # labels = client.get_labels_in_board(board_id)
 # # print(labels)

@@ -1,11 +1,25 @@
 import click
+from pathlib import Path
+from os import path
+import json
 from .trello.client import Client
+from .trello.config import Configuration
+
 # from trello.client import Client
 
 
 key = "0581b1db0a42258051a8a25fb301e247"
 token = "e6985b1a4afdfb4168814ca486e76ff704e171d5751ce9db8c96731f8b1cc0cb"
 client = Client(key, token)
+
+
+class Format:
+    end = '\033[0m'
+    underline = '\033[4m'
+
+
+def underline(str):
+    return Format.underline + str + Format.end
 
 
 def docstring_parameter(*sub):
@@ -15,10 +29,8 @@ def docstring_parameter(*sub):
     return dec
 
 
-# class Ectrello(click.Group):
-    # def format_help(self, ctx, formatter):
-    #     help_txt = "Usage: ectrello <command> [<arg>]\n"
-    #     formatter.write(f"{help_txt}")
+path = Path(path.expanduser("~/.ectrello-config"))
+configuration = Configuration(config_path=path)
 
 
 @click.group()
@@ -27,7 +39,33 @@ def cli():
 
 
 # ********************************************************************************
-# BOARD
+# CONFIGURE
+
+
+configuraiton_ex_help = "ectrello" + " " + "configuraiton" + 40 * " " + "\n"\
+    + "ectrello" + " " + "configuraiton" + " " + "--help" + " " + 40 * " " + "\n"
+
+
+@ cli.command('configure')
+# @ click.option("--add", required=False, help="")
+@ docstring_parameter(configuraiton_ex_help)
+def configure():
+    """
+    Configure you board API keys\n
+    {0}
+    """
+    # if add is None:
+    #     print(f"{{ key: {configuration.key}, token: {configuration.token}}}")
+    # else:
+    configuration.get_config()
+    if configuration.check_config():
+        print("Warning: you are going to rewrite you trello API's key")
+        configuration.overwrite_config()
+    else:
+        configuration.post_config()
+
+    # ********************************************************************************
+    # BOARD
 show_help_board = """
 TEXT=all show all boards. |
 TEXT=first show first board. |
@@ -38,14 +76,15 @@ board_ex_help = "ectrello" + " " + "board" + " " + "--show"\
     + " " + "<option>" + 40 * " " + "\n" + "ectrello" + " " + "board" + " " + "--help"
 
 
-@cli.command('board')
-@click.option("--show", required=False, help=show_help_board)
-@docstring_parameter(board_ex_help)
+@ cli.command('board')
+@ click.option("--show", required=False, help=show_help_board)
+@ docstring_parameter(board_ex_help)
 def board(show):
     """
     Display the board of your Trello\n
     {0}
     """
+    print(token)
     if show == "all" or show is None:
         boards = client.get_boards()
         print(boards)
@@ -111,7 +150,7 @@ def list(show, add, boardid):
         first_list = client.get_lists_in_board(boardid)[-1]
         print(first_list)
     elif (show is None) and (add is None):
-        print("Warning: Please select an option --show or --add")
+        print({"status code": 404, "message": "Please select an option --show or --add"})
         return
     elif (add is not None) and (boardid is not None):
         list = client.post_list(name=add, board_id=boardid)
@@ -156,7 +195,7 @@ def card(show, add, listid):
         cards = client.get_cards_in_list(listid)
         print(cards)
     elif (show is None) and (add is None):
-        print("Warning: Please select an option --show or --add")
+        print({"status code": 404, "message": "Please select an option --show or --add"})
         return
     elif (add is not None) and (listid is not None):
         card = client.post_card(name=add, list_id=listid)
@@ -169,67 +208,125 @@ def card(show, add, listid):
 
 # ********************************************************************************
 # LABEL
-label_id_help = """
-TEXT=<card_id> the list id to show its card.
-"""
-add_label_help = " TEXT=<card_name> add a new card with name."
 
-show_label_help = """
-TEXT=<card_id> show one card of id. |
-TEXT=all show all cards in a list.
+label_add_help = """
+TEXT=<label_text> the label text to add.
+"""
+card_id_help = """
+TEXT=<card_id> the card id to add label on.
 """
 
-label_ex_help = "ectrello" + " " + "card" + " " + "--listid"\
-    + " " + "<list_id>" + " " + "--add" + " " + "<card_name>" + 40*" " + "\n"\
-    + " " + "ectrello" + " " + "card" + " " + "--listid"\
-    + " " + "<list_id> " + "--show" + " " + "<card_id>" + 40*" " + "\n"\
-    + " " + "ectrello" + " " + "card" + " " + "--help"
+board_id_help = """
+TEXT=<board_id> the board id to add label on.
+"""
+add_label_help = " TEXT=<label_text> add a new label with text."
+
+
+label_ex_help = "ectrello" + " " + "label" + " " + "--add" + " " + "<label_text>"\
+    + " " + "--cardid" + " " + "<card_id>" + 40*" " + "\n"\
+    + " " + "ectrello" + " " + "label" + " " + "--add"\
+    + " " + "<label_text> " + "--boardid" + " " + "<boardid>" + 40*" " + "\n"\
+    + " " + "ectrello" + " " + "label" + " " + "--help"
 
 
 @ cli.command('label')
-@ click.option("--add", required=False, help=add_card_help)
-@ click.option("--listid", required=True, help=list_id_help)
-@ click.option("--show", required=False, help=show_card_help)
+@ click.option("--add", required=True, help=label_add_help)
+@ click.option("--cardid", required=False, help=card_id_help)
+@ click.option("--boardid", required=False, help=board_id_help)
 @ docstring_parameter(label_ex_help)
-def label(show, add, listid):
+def label(add, cardid, boardid):
     """
-    Add a card to a column, display the cards of a list \n
+    Add a label to a column, display the labels of a board \n
     {0}
     """
-    if show == "all":
-        cards = client.get_cards_in_list(listid)
-        print(cards)
-    elif (show is None) and (add is None):
-        print("Warning: Please select an option --show or --add")
+    if (cardid is not None):
+        label = client.get_label(id=add)
+        if type(label) is tuple:
+            # label is not existed so create a new one on board of card
+            card = client.get_card(cardid)
+            board_id = card.board_id
+            label = client.post_label_to_baord(name=add, board_id=board_id)
+            label_id = label.id
+            card_id = card.id
+            new_label = client.post_label_to_card(id=label_id, card_id=card_id)
+            print(new_label)
+        else:
+            # existing label
+            label_id = label.id
+            new_label = client.post_label_to_card(id=label_id, card_id=cardid)
+            print(new_label)
+
+    elif (cardid is None) and (boardid is not None):
+        label = client.post_label_to_baord(name=add, board_id=boardid)
+        print(label)
+    elif (cardid is None) and (boardid is None):
+        print({"status code": 404, "message": "Please select an option --cardid or --boardid"})
         return
-    elif add is not None:
-        card = client.post_card(name=add, list_id=listid)
-        print(card)
     else:
-        # show is not None
-        card = client.get_card(id=show)
-        print(card)
+        return
 
 
 # ********************************************************************************
 # COMMENT
 card_id_help = """
-TEXT=<card_id> the card id to show its comment.
+TEXT=<card_id> the card id to show its comments.
 """
-add_comment_help = " TEXT=<comment_text> add a new comment on a card."
+add_comment_help = " TEXT=<comment_text> add a new comment  on a card."
 
 show_comment_help = """
 TEXT=<card_id> show comments of card id
 """
 
 comment_ex_help = "ectrello" + " " + "comment" + " " + "--cardid"\
-    + " " + "<card_id>" + " " + "--add" + " " + "<text>" + 100*" " + "\n"\
-    + " " + "ectrello" + " " + "card" + " " + "--help"
+    + " " + "<card_id>" + " " + "--add" + " " + "<comment_text>" + 40 * " " + "\n"\
+    + "ectrello" + " " + "comment" + " " + "--cardid"\
+    + " " + "<card_id>" + " " + "--show" + " " + "all" + 40 * " " + "\n"\
+    + "ectrello" + " " + "card" + " " + "--help"
 
 
 @ cli.command('comment')
-@ click.option("--add", required=False, help=add_comment_help)
 @ click.option("--cardid", required=True, help=card_id_help)
+@ click.option("--add", required=False, help=add_comment_help)
+@ click.option("--show", required=False, help=add_comment_help)
+@ docstring_parameter(comment_ex_help)
+def comment(show, add, cardid):
+    """
+    Add a comment to a column\n
+    {0}
+    """
+    if (show is None) and (add is None):
+        print("Warning: Please select an option --show or --add")
+        return
+    elif (show == "all"):
+        comments = client.get_comments_in_card(card_id=cardid)
+        print(comments)
+    else:
+        # add is not None
+        comment = client.post_comment_card(text=add, card_id=cardid)
+        print(comment)
+
+
+# ********************************************************************************
+# CONFIGURE
+card_id_help = """
+TEXT=<card_id> the card id to show its comments.
+"""
+add_comment_help = " TEXT=<comment_text> add a new comment  on a card."
+
+show_comment_help = """
+TEXT=<card_id> show comments of card id
+"""
+
+comment_ex_help = "ectrello" + " " + "comment" + " " + "--cardid"\
+    + " " + "<card_id>" + " " + "--add" + " " + "<comment_text>" + 40 * " " + "\n"\
+    + "ectrello" + " " + "comment" + " " + "--cardid"\
+    + " " + "<card_id>" + " " + "--show" + " " + "all" + 40 * " " + "\n"\
+    + "ectrello" + " " + "card" + " " + "--help"
+
+
+@ cli.command('comment')
+@ click.option("--cardid", required=True, help=card_id_help)
+@ click.option("--add", required=False, help=add_comment_help)
 @ click.option("--show", required=False, help=add_comment_help)
 @ docstring_parameter(comment_ex_help)
 def comment(show, add, cardid):
