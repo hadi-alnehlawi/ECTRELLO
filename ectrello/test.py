@@ -2,17 +2,22 @@
 from pathlib import Path
 from os import path
 import json
+
 from trello.config import Configuration
 
 key = "0581b1db0a42258051a8a25fb301e247"
 token = "e6985b1a4afdfb4168814ca486e76ff704e171d5751ce9db8c96731f8b1cc0cb"
 # client = Client(key, token)
 
+
 path = Path(path.expanduser("~/.ectrello-config"))
-config = Configuration(config_path=path)
-config.post_config()
-print("key: ", config.key)
-print("token : ", config.token)
+configuration = Configuration(config_path=path)
+print(configuration.check_with_trello())
+if not configuration.check_with_trello():
+    print("not success")
+else:
+    print("success")
+
 
 # ****
 # GET

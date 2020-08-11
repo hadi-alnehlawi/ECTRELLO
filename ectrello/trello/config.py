@@ -2,6 +2,7 @@
 from pathlib import Path
 from os import path
 import json
+import requests
 
 key = "0581b1db0a42258051a8a25fb301e247"
 token = "e6985b1a4afdfb4168814ca486e76ff704e171d5751ce9db8c96731f8b1cc0cb"
@@ -57,3 +58,12 @@ class Configuration():
                 self.token = input("token : ")
                 conf_dict = f'{{"key": "{self.key}", "token": "{self.token}"}}'
                 f.write(conf_dict)
+
+    def check_with_trello(self):
+        try:
+            self.get_config()
+            url = f"https://api.trello.com/1/tokens/{self.token}?key={self.key}&token={self.token}"
+            keys_response = requests.get(url).json()
+            return True
+        except:
+            return False
