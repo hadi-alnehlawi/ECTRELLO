@@ -16,10 +16,10 @@ token = "e6985b1a4afdfb4168814ca486e76ff704e171d5751ce9db8c96731f8b1cc0cb"
 
 
 class Configuration():
-    def __init__(self, config_path):
+    def __init__(self, config_path=None, key=None, token=None):
         self.config_path = config_path
-        self.key = None
-        self.token = None
+        self.key = key
+        self.token = token
 
     def check_config(self):
         if (self.config_path.exists()):
@@ -62,6 +62,14 @@ class Configuration():
     def check_with_trello(self):
         try:
             self.get_config()
+            url = f"https://api.trello.com/1/tokens/{self.token}?key={self.key}&token={self.token}"
+            keys_response = requests.get(url).json()
+            return True
+        except:
+            return False
+
+    def check_unittest_with_trello(self):
+        try:
             url = f"https://api.trello.com/1/tokens/{self.token}?key={self.key}&token={self.token}"
             keys_response = requests.get(url).json()
             return True

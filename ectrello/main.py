@@ -47,9 +47,7 @@ def configure():
     Configure you board API keys\n
     {0}
     """
-    # if add is None:
-    #     print(f"{{ key: {configuration.key}, token: {configuration.token}}}")
-    # else:
+
     configuration.get_config()
     if configuration.check_config():
         print("Warning: you are going to rewrite you trello API's key")
@@ -58,8 +56,8 @@ def configure():
         configuration.post_config()
 
 
-    # ********************************************************************************
-    # BOARD
+# ********************************************************************************
+# BOARD
 show_help_board = """
 TEXT=all show all boards. |
 TEXT=first show first board. |

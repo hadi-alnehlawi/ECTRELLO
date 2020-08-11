@@ -179,19 +179,19 @@ class Client():
             return {"status_code": requests.get(url), "message": "input data is wrong"}, 404
 
     def post_label_to_baord(self, name, board_id, color="red"):
-        # try:
-        payload = {
-            "key": f"{self.key}", "token": f"{self.token}", "name": f"{name}", "idBoard": f"{board_id}", "color": f"{color}"
-        }
-        url = self.trello_api.label_url(method="POST")
-        lable_response = requests.post(url=url, json=payload)
-        res_json = json.loads(lable_response.text)
-        id = res_json.get("id")
-        name = res_json.get("name")
-        board_id = res_json.get("idBoard")
-        return Label(id=id, name=name, board_id=board_id)
-        # except:
-        #     return {"status_code": requests.get(url).status_code, "message": "input data is wrong"}
+        try:
+            payload = {
+                "key": f"{self.key}", "token": f"{self.token}", "name": f"{name}", "idBoard": f"{board_id}", "color": f"{color}"
+            }
+            url = self.trello_api.label_url(method="POST")
+            lable_response = requests.post(url=url, json=payload)
+            res_json = json.loads(lable_response.text)
+            id = res_json.get("id")
+            name = res_json.get("name")
+            board_id = res_json.get("idBoard")
+            return Label(id=id, name=name, board_id=board_id)
+        except:
+            return {"status_code": requests.get(url).status_code, "message": "input data is wrong"}
 
     def post_label_to_card(self, id, card_id):
         try:
@@ -206,18 +206,18 @@ class Client():
         except:
             return {"status_code": requests.get(url).status_code, "message": "input data is wrong"}
 
-    def post_exisitng_label_to_card(self, id, card_id):
-        try:
-            payload = {
-                "key": f"{self.key}", "token": f"{self.token}", "value": f"{id}"
-            }
-            url = self.trello_api.label_card_url(card_id=card_id)
-            label_card_response = requests.post(url=url, json=payload)
-            res_json = json.loads(label_card_response.text)
-            name = self.get_label(id=id).name
-            return Label(name=name, card_id=card_id)
-        except:
-            return label_card_response.status_code
+    # def post_exisitng_label_to_card(self, id, card_id):
+    #     try:
+    #         payload = {
+    #             "key": f"{self.key}", "token": f"{self.token}", "value": f"{id}"
+    #         }
+    #         url = self.trello_api.label_card_url(card_id=card_id)
+    #         label_card_response = requests.post(url=url, json=payload)
+    #         res_json = json.loads(label_card_response.text)
+    #         name = self.get_label(id=id).name
+    #         return Label(name=name, card_id=card_id)
+    #     except:
+    #         return label_card_response.status_code
 
     # *******
     # COMMENT
