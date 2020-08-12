@@ -100,11 +100,17 @@ def board(show):
             print(boards)
         elif show == "first":
             boards = client.get_boards()
-            board = client.get_board(id=boards[0].id)
+            if len(boards) > 0:
+                board = client.get_board(id=boards[0].id)
+            else:
+                board = []
             print(board)
         elif show == "last":
             boards = client.get_boards()
-            board = client.get_board(id=boards[-1].id)
+            if len(boards) > 0:
+                board = client.get_board(id=boards[-1].id)
+            else:
+                board = []
             print(board)
         else:
             board = client.get_board(id=show)
@@ -128,23 +134,18 @@ TEXT=first show first in a board. |
 TEXT=last show last in a board. |
 """
 
-list_ex_help = "ectrello" + " " + "list" + " " + "--boardid"\
-    + " " + "<board_id>" + "--add " + "<list_name>" + 40*" " + "\n"\
-    + " " + "ectrello" + " " + "list" + " " + "--boardid"\
-    + " " + "<board_id>" + " " + "--show" + " " + "<list_id>" + 40*" " + "\n"\
-    + " " + "ectrello" + " " + "list" + " " + "--boardid"\
-    + " " + "<board_id>" + " " + "--show all" + 40*" " + "\n"\
-    + " " + "ectrello" + " " + "list" + " " + "--boardid"\
-    + " " + "<board_id>" + " " + "--show first" + 40*" " + "\n"\
-    + " " + "ectrello" + " " + "list" + " " + "--boardid"\
-    + " " + "<board_id>" + " " + "--show last" + 40*" " + "\n"\
-    + " " + "ectrello" + " " + "list" + " " + "--help"\
-
+list_ex_help = ""\
+    + "ectrello list --add <list_name> --boardid <board_id>" + 40*" " + "\n"\
+    + "ectrello list --show <list_id> --boardid <board_id>" + 40*" " + "\n"\
+    + "ectrello list --show all --boardid <board_id>" + 40*" " + "\n"\
+    + "ectrello list --show first --boardid <board_id>" + " " + + 40*" " + "\n"\
+    + "ectrello list --show last --boardid <board_id>" + " " + + 40*" " + "\n"\
+    + "ectrello list --help"
 
 
 @ cli.command('list')
 @ click.option("--add", required=False, help=add_list_help)
-@ click.option("--boardid", required=False, help=board_id_help)
+@ click.option("--boardid", required=True, help=board_id_help)
 @ click.option("--show", required=False, help=show_list_help)
 @ docstring_parameter(list_ex_help)
 def list(show, add, boardid):
@@ -158,10 +159,16 @@ def list(show, add, boardid):
             lists = client.get_lists_in_board(boardid)
             print(lists)
         elif (show == "first") and (boardid is not None):
-            first_list = client.get_lists_in_board(boardid)[0]
+            if len(client.get_lists_in_board(boardid)) > 0:
+                first_list = client.get_lists_in_board(boardid)[0]
+            else:
+                first_list = []
             print(first_list)
         elif (show == "last") and (boardid is not None):
-            first_list = client.get_lists_in_board(boardid)[-1]
+            if len(client.get_lists_in_board(boardid)) > 0:
+                first_list = client.get_lists_in_board(boardid)[-1]
+            else:
+                first_list = []
             print(first_list)
         elif (show is None) and (add is None):
             print({"status code": 404, "message": "Please select an option --show or --add"})
