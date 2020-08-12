@@ -7,7 +7,7 @@ setup(
     # py_modules=['main'],
     include_package_data=True,
     install_requires=[
-        'Click', 'requests', 'autopep8', 'pycodestyle', 'pytest'
+        'Click', 'requests', 'autopep8', 'pycodestyle'
 
     ],
     entry_points={

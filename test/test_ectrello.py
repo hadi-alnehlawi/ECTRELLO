@@ -12,26 +12,31 @@ class TestBoard(unittest.TestCase):
 
     def setUp(self):
         self.board_id = None
+        self.execute_tear_down = True
         try:
             self.board_name = f"test_board_{randint(1000000, 9999999)}"
             key = os.environ['TRELLO_KEY']
             token = os.environ["TRELLO_TOKEN"]
             self.config = Configuration(key=key, token=token)
             if self.config.check_unittest_with_trello():
+                self.config = Configuration(key=key, token=token)
                 pass
             else:
-                raise Exception()
-        except:
+                raise EnvironmentError
+
+        except EnvironmentError:
             print("Environment $TRELLO_KEY and $TRELLO_TOKEN variables are not set successfully")
-        finally:
-            self.config = Configuration(key=key, token=token)
+            self.execute_tear_down = False
+        # finally:
+        self.config = Configuration(key=key, token=token)
 
     def tearDown(self):
-        self.delete_board()
+        if self.execute_tear_down:
+            self.delete_board()
 
     # Add a list to a board
     def test_add_list(self):
-        if self.config.check_unittest_with_trello():
+        if self.config.check_unittest_with_trello() :
             client = Client(key=self.config.key, token=self.config.token)
             new_board = self.new_board(name=self.board_name)
             list_name = f"test_list_{randint(1000000, 9999999)}"
@@ -111,4 +116,9 @@ class TestBoard(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    # unittest.main()
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestBoard)
+    unittest.TextTestRunner(verbosity=2).run(suite)
+
+
+# python -m unittest  -v
