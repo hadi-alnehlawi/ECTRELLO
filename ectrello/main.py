@@ -47,13 +47,29 @@ def configure():
     Configure you board API keys\n
     {0}
     """
+    msg1 = "Welcome to ectrello..\n"
+    msg2 = "This CLI is developed by @Hadi.Alnehalwi as a code excerice for Epilot.Cloud\n"
+    msg3 = "You are going to write your trello API keys to interacte with ectrell cli\n"
+    msg4 = "Do you want to coninture'?"
+    confirm_text =\
+        "\n"\
+        + len(msg2) * "*" + "\n"\
+        + msg1\
+        + msg2\
+        + len(msg2) * "*" + "\n\n"\
+        + msg3\
+        + msg4
 
-    configuration.get_config()
-    if configuration.check_config():
-        print("Warning: you are going to rewrite you trello API's key")
-        configuration.overwrite_config()
+    if click.confirm(confirm_text):
+        configuration.get_config()
+        if configuration.check_config():
+            configuration.overwrite_config()
+        else:
+            configuration.post_config()
+    if configuration.check_with_trello():
+        pass
     else:
-        configuration.post_config()
+        print("Trello API's keys are not correct. Please try agai.!")
 
 
 # ********************************************************************************

@@ -33,23 +33,6 @@ class TestBoard(unittest.TestCase):
             self.config = Configuration(key=self.configuration.key,
                                         token=self.configuration.token)
 
-        # try:
-        #     self.board_name = f"test_board_{randint(1000000, 9999999)}"
-        #     key = os.environ['TRELLO_KEY']
-        #     token = os.environ["TRELLO_TOKEN"]
-        #     self.config = Configuration(key=key, token=token)
-        #     if self.config.check_unittest_with_trello():
-        #         self.config = Configuration(key=key, token=token)
-        #         pass
-        #     else:
-        #         raise EnvironmentError
-        #
-        # except EnvironmentError:
-        #     print("Environment $TRELLO_KEY and $TRELLO_TOKEN variables are not set successfully")
-        #     self.execute_tear_down = False
-        # # finally:
-        # self.config = Configuration(key=key, token=token)
-
     def tearDown(self):
         if self.execute_tear_down:
             self.delete_board()
@@ -139,6 +122,3 @@ if __name__ == '__main__':
     # unittest.main()
     suite = unittest.TestLoader().loadTestsFromTestCase(TestBoard)
     unittest.TextTestRunner(verbosity=2).run(suite)
-
-
-# python -m unittest  -v
