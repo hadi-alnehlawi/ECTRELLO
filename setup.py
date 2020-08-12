@@ -19,7 +19,7 @@ setup(
     ],
     python_requires='>=3.6',
     name='ectrello',
-    version='1.0.0',
+    version='1.1.0',
     include_package_data=True,
     install_requires=[
         'Click', 'requests', 'autopep8', 'pycodestyle'

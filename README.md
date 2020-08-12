@@ -18,14 +18,15 @@ $ ectrello comment --add <text> --cardid <card_id>
 
 
 ## Setup
+The cli could be installed in three different ways
 
-###  Python pip
+1. ###  Python pip
 
 The cli project has been upload to [python package index](https://test.pypi.org/project/ectrello/):
 `$ pip install -i https://test.pypi.org/simple/ ectrello`
 
 
-### Docker
+2. ### Docker
 
 As a requisite a docker has to be installed, you may check if it is existed:
 `$ docker --version`
@@ -43,7 +44,7 @@ You can interact with **ectrello** by running the container. The below will run 
 One the container is running you are now able to launch ectrello:
 `$ ectrello --help`
 
-### Manually
+3. ### Manually
 As a perquisite virtualenv package has to be installed, you check if it is existed:
 `$ virtualenv --version`
 
@@ -121,8 +122,8 @@ $ ectrello list --help
 Examples:
 
  ```
-$ ectrello card --listid <list_id> --add <card_name>
-$ ectrello card --listid <list_id> --show <card_id>
+$ ectrello card --add <card_name> --listid <list_id>
+$ ectrello card --show <card_id> --listid <list_id>
 $ ectrello card --help
  ```
 >options
@@ -151,6 +152,8 @@ $ ectrello label --help
 >`--boardid <boardid>` the board id to add label on
 >`--help` display help of the command
 
+A  prompt appears asking the user to input a color number, valid values: `yellow`, `purple`, `blue`, `red`, `green`, `orange`, `black`, `sky`, `pink`, `lime`
+
 
 
 
@@ -162,14 +165,14 @@ Add a comment to a column
 Examples:
 
  ```
-$ ectrello label --cardid <card_id> --add <comment_text>
+$ ectrello label --cardid <card_id> --add <text>
 $ ectrello label --cardid <card_id> --show all
 $ ectrello label --help
  ```
 
 >options
 > `--card <card_id>` the card id to show its comments [**required**]
->`--add <comment_text>` 	the comment to add on a card
+>`--add <text>` 	the comment to add on a card
 >`--help` display help of the command
 
 ## Testing
