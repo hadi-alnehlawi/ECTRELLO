@@ -198,12 +198,10 @@ TEXT=<card_id> show one card of id. |
 TEXT=all show all cards in a list.
 """
 
-card_ex_help = "ectrello" + " " + "card" + " " + "--listid"\
-    + " " + "<list_id> " + "--add" + " " + "<card_name>" + 40*" " + "\n"\
-    + "ectrello" + " " + "card" + " " + "--listid"\
-    + " " + "<list_id> " + "--show" + " " + "<card_id>" + 40*" " + "\n"\
-    + "ectrello" + " " + "card" + " " + "--help"\
-
+card_ex_help = ""\
+    + "ectrello card --add <card_name> --listid <list_id>" + 40 * " " + "\n"\
+    + "ectrello card --show <card_id> --listid <list_id>" + 40 * " " + "\n"\
+    + "ectrello card --help"
 
 
 @ cli.command('card')
@@ -252,11 +250,10 @@ TEXT=<board_id> the board id to add label on.
 add_label_help = " TEXT=<label_text> add a new label with text."
 
 
-label_ex_help = "ectrello" + " " + "label" + " " + "--add" + " " + "<label_text>"\
-    + " " + "--cardid" + " " + "<card_id>" + 40*" " + "\n"\
-    + " " + "ectrello" + " " + "label" + " " + "--add"\
-    + " " + "<label_text> " + "--boardid" + " " + "<boardid>" + 40*" " + "\n"\
-    + " " + "ectrello" + " " + "label" + " " + "--help"
+label_ex_help = ""\
+    + "ectrello label --add <label_text> --cardid <card_id>" + 40*" " + "\n"\
+    + "ectrello label --add <label_text> --boardid <boardid>" + 40*" " + "\n"\
+    + "ectrello label --help"
 
 
 @ cli.command('label')
@@ -271,17 +268,32 @@ def label(add, cardid, boardid):
     """
     if configuration.check_with_trello():
         client = Client(configuration.key, configuration.token)
+        colors = ["red (default)", "purple", "blue", "yellow", "green",
+                  "orange", "black", "sky", "pink", "lime"]
+        color = ""
+        colors_prompt = [(color, index) for color, index in enumerate(colors)]
         if (cardid is not None):
             label = client.get_label(id=add)
             if type(label) is tuple:
                 # label is not existed so create a new one on board of card
                 card = client.get_card(cardid)
-                board_id = card.board_id
-                label = client.post_label_to_baord(name=add, board_id=board_id)
-                label_id = label.id
-                card_id = card.id
-                new_label = client.post_label_to_card(id=label_id, card_id=card_id)
-                print(new_label)
+                if type(card) is tuple:
+                    # card is not existed - wrong input
+                    print("{ status_code: 404, message: input data is wrong}")
+                else:
+                    board_id = card.board_id
+                    # if click.confirm(confirm_text):
+                    color_index = click.prompt(f"{colors_prompt}\nPlease select color number from above. Ex 2 for blue?",
+                                               hide_input=False, show_default=True, type=int)
+                    if color_index in range(1, len(colors)):
+                        color = colors[color_index]
+                    else:
+                        color = "red"
+                    label = client.post_label_to_baord(name=add, board_id=board_id, color=color)
+                    label_id = label.id
+                    card_id = card.id
+                    new_label = client.post_label_to_card(id=label_id, card_id=card_id)
+                    print(new_label)
             else:
                 # existing label
                 label_id = label.id
@@ -289,7 +301,13 @@ def label(add, cardid, boardid):
                 print(new_label)
 
         elif (cardid is None) and (boardid is not None):
-            label = client.post_label_to_baord(name=add, board_id=boardid)
+            color_index = click.prompt(f"{colors_prompt}\nPlease select color number from above. Ex 2 for blue?",
+                                       hide_input=False, show_default=True, type=int)
+            if color_index in range(1, len(colors)):
+                color = colors[color_index]
+            else:
+                color = "red"
+            label = client.post_label_to_baord(name=add, board_id=boardid, color=color)
             print(label)
         elif (cardid is None) and (boardid is None):
             print({"status code": 404, "message": "Please select an option --cardid or --boardid"})
@@ -312,11 +330,10 @@ show_comment_help = """
 TEXT=<card_id> show comments of card id
 """
 
-comment_ex_help = "ectrello" + " " + "comment" + " " + "--cardid"\
-    + " " + "<card_id>" + " " + "--add" + " " + "<comment_text>" + 40 * " " + "\n"\
-    + "ectrello" + " " + "comment" + " " + "--cardid"\
-    + " " + "<card_id>" + " " + "--show" + " " + "all" + 40 * " " + "\n"\
-    + "ectrello" + " " + "card" + " " + "--help"
+comment_ex_help = "" \
+    + "ectrello comment --add <text> --cardid <card_id>" + 40 * " " + "\n"\
+    + "ectrello comment --show all --cardid <card_id>" + 40 * " " + "\n"\
+    + "ectrello card --help"
 
 
 @ cli.command('comment')

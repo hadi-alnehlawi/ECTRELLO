@@ -6,3 +6,4 @@ venv/
 ectrello.egg-info/
 dist/
 build/
+temp.py

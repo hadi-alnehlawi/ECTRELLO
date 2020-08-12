@@ -206,19 +206,6 @@ class Client():
         except:
             return {"status_code": requests.get(url).status_code, "message": "input data is wrong"}
 
-    # def post_exisitng_label_to_card(self, id, card_id):
-    #     try:
-    #         payload = {
-    #             "key": f"{self.key}", "token": f"{self.token}", "value": f"{id}"
-    #         }
-    #         url = self.trello_api.label_card_url(card_id=card_id)
-    #         label_card_response = requests.post(url=url, json=payload)
-    #         res_json = json.loads(label_card_response.text)
-    #         name = self.get_label(id=id).name
-    #         return Label(name=name, card_id=card_id)
-    #     except:
-    #         return label_card_response.status_code
-
     # *******
     # COMMENT
     # *******
