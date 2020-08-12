@@ -2,11 +2,11 @@
 
 ## Introduction
 Epilot.Cloud Trello cli  (**ectrello** )  is a user-friendly cli which interacts with Trello easily and productively, below are some examples of its functionality:
-1. Add a list to a board:
+1. Add a list to a board
 2. Add a  card to a column
-3. Add a  label on a card:
-4. Add a  label on a board:
-5. Add a comment on a card:
+3. Add a  label on a card
+4. Add a  label on a board
+5. Add a comment on a card
 
 Examples:
 ```
@@ -22,33 +22,33 @@ The cli could be installed in three different ways
 
 1. ###  Python pip
 
-The cli project has been upload to [python package index](https://test.pypi.org/project/ectrello/):
+The cli project is hosted on [python package index](https://test.pypi.org/project/ectrello/):
 `$ pip install -i https://test.pypi.org/simple/ ectrello`
 
 
 2. ### Docker
 
-As a requisite a docker has to be installed, you may check if it is existed:
+As a requisite a docker must be installed, you may check if it is existed:
 `$ docker --version`
 
-The docker will create a persisted image of ectrello cli and will be tag with a name **ectrello**:
+The docker will create a persisted image of ectrello cli and will be tagged with a name **ectrello**:
 ```
 $ git clone https://github.com/hadi-alnehlawi/ECTRELLO
 $ cd ECTRELLO
 $ docker build --tag ectrello .
 ```
 
-You can interact with **ectrello** by running the container. The below will run the container and will be removed after exiting each time:
+You can interact with **ectrello** by running the container. It is automatically purged after closing
 `$ docker run --rm -ti ectrello bash`
 
-One the container is running you are now able to launch ectrello:
+You are now able to launch ectrelle on the running docker
 `$ ectrello --help`
 
 3. ### Manually
-As a perquisite virtualenv package has to be installed, you check if it is existed:
+As a perquisite virtualenv package might be installed
 `$ virtualenv --version`
 
-If not, please visit this [pypi](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/) tutorial for more clarification. Please follow the below command in sequence:
+If not, please visit this [pypi](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/) tutorial for more clarification. Follow the below commands in a sequence
 ```
 $ git clone https://github.com/hadi-alnehlawi/ECTRELLO
 $ cd ECTRELLO
@@ -56,16 +56,16 @@ $ virtualenv venv
 $ source venv/bin/activate
 $ pip install .
 ```
-Now **ectrello** is  installed successfully on your terminal
+ It is now installed successfully
 `$ ectrell --help`
 
 ## Usage
 ` ectrello <command> [options]`
 
-The trello objects  **board**, **list**, **card**, **label**, **comment**   are controlled by ectrello cli by the following commands:
+The trello has a couple of  **board**, **list**, **card**, **label**, **comment**   which are controlled by ectrello cli using the below commands:
 
 #### configure
-In order to start using the cli, the user must enter its trello API's *token* & *key* by running configure command. As a perquisite the keys  could be generated  form [Trello API](https://trello.com/app-key):
+In order to start using the cli, the user must enter its trello API's *token* & *key* by running configure command. As a perquisite the keys  could be generated  form [Trello API](https://trello.com/app-key)
 
 `$ ectrello configure`
 
@@ -79,7 +79,7 @@ In order to start using the cli, the user must enter its trello API's *token* & 
  $ ectrello board --help
  ```
  >options
-`--show all`  display all board of your trello
+`--show all`  display all boards of your trello
 `--show first` display first list of your trello
 `--show last`  display last list of your trello
 `--help` display help of the command
@@ -90,8 +90,8 @@ In order to start using the cli, the user must enter its trello API's *token* & 
 ####  list
 
 ` ectrello list [OPTIONS]`
-- Add a Trello card to a column
-- Show a Trello card from one of boards
+- Add a card to a column
+- Show a card from one of boards
 
 Examples:
 
@@ -104,12 +104,12 @@ $ ectrello list --help
  ```
 
 >options
-> `--boardid <board_id>` 	the board id to show its list  [**required**]
->`--add <list_name>` 	create new list with name <list_name> in one of your boards.
->`--show <list_id>` 		display the list which list is <list_id>
->`--show all` 					display all lists in one of your board
->`--show first`  			display first list in one of your board
->`--show last`			    display last list in one of your board
+> `--boardid <board_id>` 	the board id to interact with its list  [**required**]
+>`--add <list_name>` 	create a new list with a name <list_name> in one of  boards.
+>`--show <list_id>` 		display the list of id <list_id>
+>`--show all` 					display all lists in a board
+>`--show first`  			display first list in a board
+>`--show last`			    display last list in a board
 >`--help` display help of the command
 
 #### card
@@ -122,8 +122,8 @@ $ ectrello list --help
 Examples:
 
  ```
-$ ectrello card --add <card_name> --listid <list_id>
-$ ectrello card --show <card_id> --listid <list_id>
+$ ectrello card --listid <list_id> -add <card_name>  
+$ ectrello card --listid <list_id> --show <card_id>  
 $ ectrello card --help
  ```
 >options

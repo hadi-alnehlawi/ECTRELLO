@@ -212,8 +212,7 @@ card_ex_help = ""\
 def card(show, add, listid):
     """
     Add a card to a column, display the cards of a list \n
-    A  prompt appears asking the user to input a color number\nvalid values:\n[`yellow`, `purple`, `blue`, `red`, `green`, `orange`, `black`, `sky`, `pink`, `lime`]
-    \n\n\n{0}
+    {0}
     """
     if configuration.check_with_trello():
         client = Client(configuration.key, configuration.token)
@@ -265,6 +264,8 @@ label_ex_help = ""\
 def label(add, cardid, boardid):
     """
     Add a label to a column, display the labels of a board \n
+    A  prompt appears asking the user to input a color number\nvalid values:\n[`yellow`, `purple`, `blue`, `red`, `green`, `orange`, `black`, `sky`, `pink`, `lime`]
+    \n\n\n
     {0}
     """
     if configuration.check_with_trello():
