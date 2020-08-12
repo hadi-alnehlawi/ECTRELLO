@@ -1,34 +1,54 @@
 import unittest
-from ectrello.trello.client import Client
-from ectrello.trello.config import Configuration
-from ectrello.trello.model import Board, List, Card
-from random import randint
 import os
 import json
 import requests
+from pathlib import Path
+from os import path
+from random import randint
+from ectrello.trello.client import Client
+from ectrello.trello.config import Configuration
+from ectrello.trello.model import Board, List, Card
+from ectrello.trello.config import Configuration
+
+
+path = Path(path.expanduser("~/.ectrello-config"))
 
 
 class TestBoard(unittest.TestCase):
 
     def setUp(self):
+        self.board_name = f"test_board_{randint(1000000, 9999999)}"
         self.board_id = None
         self.execute_tear_down = True
+        self.configuration = Configuration(config_path=path)
         try:
-            self.board_name = f"test_board_{randint(1000000, 9999999)}"
-            key = os.environ['TRELLO_KEY']
-            token = os.environ["TRELLO_TOKEN"]
-            self.config = Configuration(key=key, token=token)
-            if self.config.check_unittest_with_trello():
-                self.config = Configuration(key=key, token=token)
+            if self.configuration.check_with_trello():
                 pass
             else:
                 raise EnvironmentError
-
         except EnvironmentError:
-            print("Environment $TRELLO_KEY and $TRELLO_TOKEN variables are not set successfully")
+            print("Trello API's keys are not correct. Run this commnad first $ectroll configure")
             self.execute_tear_down = False
-        # finally:
-        self.config = Configuration(key=key, token=token)
+        finally:
+            self.config = Configuration(key=self.configuration.key,
+                                        token=self.configuration.token)
+
+        # try:
+        #     self.board_name = f"test_board_{randint(1000000, 9999999)}"
+        #     key = os.environ['TRELLO_KEY']
+        #     token = os.environ["TRELLO_TOKEN"]
+        #     self.config = Configuration(key=key, token=token)
+        #     if self.config.check_unittest_with_trello():
+        #         self.config = Configuration(key=key, token=token)
+        #         pass
+        #     else:
+        #         raise EnvironmentError
+        #
+        # except EnvironmentError:
+        #     print("Environment $TRELLO_KEY and $TRELLO_TOKEN variables are not set successfully")
+        #     self.execute_tear_down = False
+        # # finally:
+        # self.config = Configuration(key=key, token=token)
 
     def tearDown(self):
         if self.execute_tear_down:
@@ -36,7 +56,7 @@ class TestBoard(unittest.TestCase):
 
     # Add a list to a board
     def test_add_list(self):
-        if self.config.check_unittest_with_trello() :
+        if self.config.check_unittest_with_trello():
             client = Client(key=self.config.key, token=self.config.token)
             new_board = self.new_board(name=self.board_name)
             list_name = f"test_list_{randint(1000000, 9999999)}"
