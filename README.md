@@ -1,7 +1,7 @@
 # ECTRELLO
 
 ## Introduction
-Epilot.Cloud Trello cli  (**ectrello** )  is a user-friendly cli which interacts with Trello easily and prodcutively, below are some examples of its funcaitonality:
+Epilot.Cloud Trello cli  (**ectrello** )  is a user-friendly cli which interacts with Trello easily and productively, below are some examples of its functionality:
 1. Add a list to a board:
 2. Add a  card to a column
 3. Add a  label on a card:
@@ -180,7 +180,7 @@ $ python -m unittest -v
 
 ## Notes
 - The cli return json-string values to the terminal for better interactivity and integration.
-- If the trello API's key profile was deleted or was worng, a warning message would appear to notify the user to run the command: ` $ ectrello configure`
+- If the trello API's key profile was deleted or was wrong, a warning message would appear to notify the user to run the command: ` $ ectrello configure`
 
 - Upon testing random trello objects with random names are created. All objects will be automatically deleted after running the test.
 - The test process duration could consume approximately one minutes to complete due to the speed of internet connection and the response from Trello API.
