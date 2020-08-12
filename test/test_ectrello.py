@@ -14,7 +14,7 @@ from ectrello.trello.config import Configuration
 path = Path(path.expanduser("~/.ectrello-config"))
 
 
-class TestBoard(unittest.TestCase):
+class TestEctrello(unittest.TestCase):
 
     def setUp(self):
         self.board_name = f"test_board_{randint(1000000, 9999999)}"
@@ -120,5 +120,4 @@ class TestBoard(unittest.TestCase):
 
 if __name__ == '__main__':
     # unittest.main()
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestBoard)
     unittest.TextTestRunner(verbosity=2).run(suite)
