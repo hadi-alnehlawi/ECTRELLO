@@ -123,15 +123,15 @@ def board(show):
 # ********************************************************************************
 # LIST
 board_id_help = """
-TEXT=<board_id> the board id to show its list.
+TEXT=<board_id> the board id to interact with its list.
 """
-add_list_help = " TEXT=<list_name> add a new list with name."
+add_list_help = " TEXT=<list_name> create a new list with a name <list_name> in one of  boards."
 
 show_list_help = """
-TEXT=<list_id> show one list of id. |
-TEXT=all show all list in a board. |
-TEXT=first show first in a board. |
-TEXT=last show last in a board. |
+TEXT=<list_id> display the list of id. |
+TEXT=all show all lists in a board. |
+TEXT=first show the first list in a board. |
+TEXT=last show the last list in a board. |
 """
 
 list_ex_help = ""\
@@ -212,7 +212,8 @@ card_ex_help = ""\
 def card(show, add, listid):
     """
     Add a card to a column, display the cards of a list \n
-    {0}
+    A  prompt appears asking the user to input a color number\nvalid values:\n[`yellow`, `purple`, `blue`, `red`, `green`, `orange`, `black`, `sky`, `pink`, `lime`]
+    \n\n\n{0}
     """
     if configuration.check_with_trello():
         client = Client(configuration.key, configuration.token)
