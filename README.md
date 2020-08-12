@@ -1,7 +1,7 @@
 # ECTRELLO
 
 ## Introduction
-(**ectrello** ) is a user-friendly cli which interacts with Trello easily and productively, below are some examples of its functionality:
+**ectrello** is a user-friendly cli which interacts with Trello easily and productively, below are some examples of its functionality:
 1. Add a list to a board
 2. Add a  card to a column
 3. Add a  label on a card
