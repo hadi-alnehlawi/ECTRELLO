@@ -4,3 +4,4 @@ venv/
 .gitignore
 *_cache*
 dist/
+ectrello.egg-info/
