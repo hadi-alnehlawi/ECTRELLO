@@ -3,5 +3,6 @@ venv/
 **pyc**
 .gitignore
 *_cache*
-dist/
 ectrello.egg-info/
+dist/
+build/

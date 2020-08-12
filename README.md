@@ -19,6 +19,12 @@ $ ectrello comment --add <text> --cardid <card_id>
 
 ## Setup
 
+###  Python pip
+
+The cli project has been upload to [python package index](https://test.pypi.org/project/ectrello/):
+`$ pip install -i https://test.pypi.org/simple/ ectrello`
+
+
 ### Docker
 
 As a requisite a docker has to be installed, you may check if it is existed:
