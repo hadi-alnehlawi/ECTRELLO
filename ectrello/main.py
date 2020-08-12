@@ -69,7 +69,7 @@ def configure():
     if configuration.check_with_trello():
         pass
     else:
-        print("Trello API's keys are not correct. Please try agai.!")
+        print("Trello API's keys are not correct. Please try again.!")
 
 
 # ********************************************************************************
