@@ -17,18 +17,17 @@ $ ectrello comment --add <text> --cardid <card_id>
 ```
 
 
-
 ## Setup
 
 ### Docker
 
-As a requisite docker has to be installed, you may check if it is existed:
+As a requisite a docker has to be installed, you may check if it is existed:
 `$ docker --version`
 
 The docker will create a persisted image of ectrello cli and will be tag with a name **ectrello**:
 ```
-$ git clone https://github.com/hadi-alnehlawi/TRELLO-CLI
-$ cd TRELLO-CLI
+$ git clone https://github.com/hadi-alnehlawi/ECTRELLO
+$ cd ECTRELLO
 $ docker build --tag ectrello .
 ```
 
@@ -44,8 +43,8 @@ As a perquisite virtualenv package has to be installed, you check if it is exist
 
 If not, please visit this [pypi](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/) tutorial for more clarification. Please follow the below command in sequence:
 ```
-$ git clone https://github.com/hadi-alnehlawi/TRELLO-CLI
-$ cd TRELLO-CLI
+$ git clone https://github.com/hadi-alnehlawi/ECTRELLO
+$ cd ECTRELLO
 $ virtualenv venv
 $ source venv/bin/activate
 $ pip install .
