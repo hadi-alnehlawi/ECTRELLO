@@ -39,10 +39,11 @@ $ docker build --tag ectrello .
 ```
 
 You can interact with **ectrello** by running the container. It is automatically purged after closing
+
 `$ docker run --rm -ti ectrello bash`
 
-You are now able to launch ectrelle on the running docker
-`$ ectrello --help`
+You are now able to launch ectrello on the running docker
+`$ ectrello version`
 
 3. ### Manually
 As a perquisite virtualenv package might be installed
@@ -57,7 +58,7 @@ $ source venv/bin/activate
 $ pip install .
 ```
  It is now installed successfully
-`$ ectrell --help`
+`$ ectrello version`
 
 ## Usage
 ` ectrello <command> [options]`
@@ -178,7 +179,7 @@ $ ectrello label --help
 ## Testing
 In order to run the test you must configure your terminal to interact with Trello API using  your personal *key* and *token*.
 
-`$ ectrell configure`
+`$ ectrello configure`
 
 Once adding your keys, run the test:
 ```
