@@ -1,9 +1,10 @@
 import setuptools
 from setuptools import setup, find_packages
 
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
-version = "0.1.3"
+
 
 setup(
     author="Hadi Alnehlawi",
@@ -12,6 +13,9 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/hadi-alnehlawi/ECTRELLO",
+    install_requires=[
+        'Click', 'requests', 'autopep8'
+    ],
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
@@ -20,11 +24,8 @@ setup(
     ],
     python_requires='>=3.6',
     name='ectrello',
-    version=version,
+    version="0.1.10",
     include_package_data=True,
-    install_requires=[
-        'Click', 'requests', 'autopep8', 'pycodestyle'
-    ],
     entry_points={
         'console_scripts': [
             'ectrello=ectrello.main:cli'

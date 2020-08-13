@@ -10,6 +10,7 @@ from .trello.config import Configuration
 
 path = Path(path.expanduser("~/.ectrello-config"))
 configuration = Configuration(config_path=path)
+version = "0.1.10"
 
 
 class Format:
@@ -32,6 +33,15 @@ def docstring_parameter(*sub):
 def cli():
     pass
 
+
+# ********************************************************************************
+# VERSION
+@cli.command("version")
+def versioin():
+    """
+    Show ectrello version\n
+    """
+    print(version)
 
 # ********************************************************************************
 # CONFIGURE
