@@ -43,6 +43,7 @@ You can interact with **ectrello** by running the container. It is automatically
 `$ docker run --rm -ti ectrello bash`
 
 You are now able to launch ectrello on the running docker
+
 `$ ectrello version`
 
 3. ### Manually
