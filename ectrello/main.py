@@ -5,6 +5,7 @@ import json
 from .trello.client import Client
 from .trello.config import Configuration
 
+
 # from trello.client import Client
 
 path = Path(path.expanduser("~/.ectrello-config"))

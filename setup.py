@@ -3,6 +3,7 @@ from setuptools import setup, find_packages
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
+version = "0.1.3"
 
 setup(
     author="Hadi Alnehlawi",
@@ -19,7 +20,7 @@ setup(
     ],
     python_requires='>=3.6',
     name='ectrello',
-    version='0.1.1',
+    version=version,
     include_package_data=True,
     install_requires=[
         'Click', 'requests', 'autopep8', 'pycodestyle'
