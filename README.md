@@ -182,7 +182,7 @@ In order to run the test you must configure your terminal to interact with Trell
 
 Once adding your keys, run the test:
 ```
-$ cd TRELLO-CLI
+$ cd ECTRELLO
 $ python -m unittest -v
 ```
 
