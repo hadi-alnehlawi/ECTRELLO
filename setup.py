@@ -14,7 +14,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/hadi-alnehlawi/ECTRELLO",
     install_requires=[
-        'Click', 'requests', 'autopep8'
+        'Click', 'requests'
     ],
     packages=setuptools.find_packages(),
     classifiers=[
@@ -24,7 +24,7 @@ setup(
     ],
     python_requires='>=3.6',
     name='ectrello',
-    version="0.1.10",
+    version="0.1.12",
     include_package_data=True,
     entry_points={
         'console_scripts': [

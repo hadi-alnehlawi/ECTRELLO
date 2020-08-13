@@ -6,11 +6,11 @@ from .trello.client import Client
 from .trello.config import Configuration
 
 
-# from trello.client import Client
+# from trello.client impautopep8ort Client
 
 path = Path(path.expanduser("~/.ectrello-config"))
 configuration = Configuration(config_path=path)
-version = "0.1.10"
+version = "0.1.12"
 
 
 class Format:
